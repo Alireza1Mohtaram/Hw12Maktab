@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigition_profile_host.xml"
+    app:startDestination="@id/infoProfileFragment">
+    <fragment
+        android:id="@+id/infoProfileFragment"
+        android:name="com.alireza.hw12.qes1.fragments.InfoProfileFragment"
+        android:label="InfoProfileFragment" />
+    <fragment
+        android:id="@+id/registerProfileFragment"
+        android:name="com.alireza.hw12.qes1.fragments.RegisterProfileFragment"
+        android:label="RegisterProfileFragment" />
+</navigation>
