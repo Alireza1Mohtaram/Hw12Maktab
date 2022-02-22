@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.alireza.hw12.R
 import com.alireza.hw12.qes1.fragments.HomeFragment
 import com.bumptech.glide.Glide
@@ -32,19 +33,29 @@ class Movie() {
         return "Movie(id=$id, title='$title', favState=$favState, posterId=$posterId)"
     }
 
+
+
     companion object {
-        @BindingAdapter("poster")
         @JvmStatic
+        @BindingAdapter("imageUrl")
         fun loadImage(imageView: ImageView, imageURL: String?) {
+
+            val circularProgressDrawable = CircularProgressDrawable(imageView.context).apply {
+                strokeWidth = 5f
+                centerRadius = 30f
+                start()
+            }
+
+
             if (!imageURL.isNullOrBlank()) {
                 Glide.with(imageView.context)
                     .setDefaultRequestOptions(RequestOptions.fitCenterTransform())
                     .load(imageURL)
-                    .placeholder(R.drawable.ic_launcher_foreground)
+                    .placeholder(circularProgressDrawable)
                     .into(imageView);
             }
-        }
 
+        }
         @JvmStatic
         @BindingAdapter("favState")
         fun loadState(imageView: ImageView, favState: Fav) {
@@ -55,17 +66,5 @@ class Movie() {
                 imageView.setImageResource(R.drawable.ic_baseline_favorite_border_24)
 
         }
-
-//        @JvmStatic
-//        @BindingAdapter("onClickFavState")
-//            fun onClickFavState(imageView: ImageView, favState: Fav) {
-//            imageView.setOnClickListener{
-//                val fav = MovieHandler(HomeFragment()).changeFavState(id = 0)
-//                if (fav == Fav.ISFAV) loadState(imageView, Fav.NOFAV)
-//                else  loadState(imageView, Fav.ISFAV)
-//
-//            }
-//            }
-
     }
 }

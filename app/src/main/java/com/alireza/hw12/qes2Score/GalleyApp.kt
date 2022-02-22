@@ -1,76 +1,79 @@
 package com.alireza.hw12.qes2Score
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.util.JsonReader
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.alireza.hw12.R
 import com.alireza.hw12.databinding.ActivityGallertAppBinding
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonObject
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
+import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.Reader
+import java.io.IOException
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 
+
 class GalleyApp : AppCompatActivity() {
 
-    private val clinet by lazy {OkHttpClient()}
-    lateinit var binding : ActivityGallertAppBinding
-    private val executer by lazy {Executors.newSingleThreadExecutor()}
-    private val requestUrl:String ="https://picsum.photos/v2/list?limit=20"
-    lateinit var request:Request
-
+    private val clinet by lazy {
+        OkHttpClient()
+    }
+    lateinit var binding: ActivityGallertAppBinding
+    private val executer by lazy { Executors.newSingleThreadExecutor() }
+    private val requestUrl: String = "https://picsum.photos/v2/list?limit=10"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_gallert_app)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_gallert_app)
 
-        responseToObject(load())
-
+        load()
     }
     private fun load(): String {
-    Log.d("Data","load is running")
-        request = Request.Builder().url(requestUrl).build()
-        var responseBody:String=""
-        val future : Future<String>
-        try {
-            future = executer.submit(Callable<String> {
-                val call = clinet.newCall(request)
-                val response = call.execute()
-                response.body?.let { Log.d("Res", it.string()) }
-                response.body.toString()
-            })
-           // if (future.isDone)
-            responseBody = future.get()
-           // else responseBody = "Nodata"
+        Log.d("Data", "load is running")
+        val  request = Request.Builder().url(requestUrl).build()
+        val client = OkHttpClient()
+        var responseStr:String =""
+        val call = client.newCall(request)
+          call.enqueue(object  : Callback {
+               override fun onFailure(call: Call, e: IOException) {
+                   setResult( e.toString() )
+                    Log.d("Data",e.toString())
+               }
+               override fun onResponse(call: Call, response: Response) {
+                   response.body?.string()?.let { responseToObject(it) }
+                    Log.d("Data","Null call back")
+               }
+           })
 
-        }catch (e:Exception){
-            println(e.message)
-        }
-        Log.d("Data","load is done")
-        Log.d("Res",responseBody)
-        return responseBody
+      return responseStr
     }
 
-    fun responseToObject(response:String):MutableList<Photo>{
-        Log.d("Data","response is running")
+    private fun responseToObject(response: String) {
 
-        var resArray = Gson().toJson(response)
-        val gson = Gson()
-        val listOfPhoto = mutableListOf<Photo>()
+        Log.d("Data", "response is $response")
 
-        Log.d("Data",resArray)
-        println(resArray.toString())
-        return listOfPhoto
+
+        val resArray = Gson().toJson(response)
+       // Log.d("Data", "resArray$resArray")
+
+        val jsonObject = JSONObject(response)
+        var jsonArray = jsonObject.getJSONArray("")
+        Log.d("Data", "resArray$jsonArray")
+
+       // return jsonArray.getJSONObject(0)
+    }
+    fun setResult(data :String?){
+        runOnUiThread{
+            if (data != null) {
+                responseToObject(data)
+            }
+        }
     }
 
 }

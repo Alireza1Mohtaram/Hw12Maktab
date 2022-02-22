@@ -35,7 +35,7 @@
                 android:padding="4dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:scaleType="fitXY"
-                app:poster="@{movie.posterId}"
+                app:imageUrl="@{movie.posterId}"
                 app:layout_constraintBottom_toTopOf="@+id/tv_home_item"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"

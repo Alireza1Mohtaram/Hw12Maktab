@@ -32,7 +32,7 @@
             <ImageView
                 android:id="@+id/poster"
                 android:scaleType="fitXY"
-                app:poster="@{movie.posterId}"
+                app:imageUrl="@{movie.posterId}"
                 android:layout_width="0dp"
                 android:layout_height="130dp"
                 android:padding="4dp"

@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.alireza.hw12.R
 import com.alireza.hw12.databinding.CoomingsoonFragmentLayoutBinding
 import com.bumptech.glide.Glide
@@ -64,11 +65,16 @@ class CoomingsoonFragment : Fragment(R.layout.coomingsoon_fragment_layout) {
     }
 
     private fun loadImage(imageView: ImageView, imageURL: String?) {
+        val circularProgressDrawable = CircularProgressDrawable(imageView.context).apply {
+            strokeWidth = 5f
+            centerRadius = 30f
+            start()
+        }
         if (!imageURL.isNullOrBlank()) {
             Glide.with(imageView.context)
                 .setDefaultRequestOptions(RequestOptions.fitCenterTransform())
                 .load(imageURL)
-                .placeholder(R.drawable.ic_launcher_foreground)
+                .placeholder(circularProgressDrawable)
                 .into(imageView);
         }
     }
